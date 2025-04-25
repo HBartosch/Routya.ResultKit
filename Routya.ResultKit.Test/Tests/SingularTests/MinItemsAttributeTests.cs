@@ -1,21 +1,21 @@
 ﻿using Routya.ResultKit.Attributes;
 using Routya.ResultKit.Test.Helpers;
 
-namespace Routya.ResultKit.Test.Tests;
-public class MaxItemsAttributeTests
+namespace Routya.ResultKit.Test.Tests.SingularTests;
+public class MinItemsAttributeTests
 {
     [Fact]
-    public void MaxItems_Valid_ShouldPass()
+    public void MinItems_Valid_ShouldPass()
     {
-        var model = new TestModel { Items = new[] { 1, 2 } };
+        var model = new TestModel { Items = new[] { 1 } };
         var result = model.Validate();
         Assert.True(result.Success);
     }
 
     [Fact]
-    public void MaxItems_Invalid_ShouldFail()
+    public void MinItems_Invalid_ShouldFail()
     {
-        var model = new TestModel { Items = new[] { 1, 2, 3, 4 } };
+        var model = new TestModel { Items = new int[0] };
         var result = model.Validate();
 
         Assert.False(result.Success);
@@ -25,7 +25,7 @@ public class MaxItemsAttributeTests
 
     private class TestModel
     {
-        [MaxItems(3)]
+        [MinItems(1)]
         public int[] Items { get; set; }
     }
 }

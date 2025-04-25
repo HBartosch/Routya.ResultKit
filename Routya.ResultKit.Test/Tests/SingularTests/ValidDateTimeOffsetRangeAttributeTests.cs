@@ -1,16 +1,16 @@
 ﻿using Routya.ResultKit.Attributes;
 using Routya.ResultKit.Test.Helpers;
 
-namespace Routya.ResultKit.Test.Tests;
-public class ValidDateTimeRangeAttributeTests
+namespace Routya.ResultKit.Test.Tests.SingularTests;
+public class ValidDateTimeOffsetRangeAttributeTests
 {
     [Fact]
-    public void ValidDateTimeRange_Valid_ShouldPass()
+    public void ValidDateTimeOffsetRange_Valid_ShouldPass()
     {
         var model = new TestModel
         {
-            Start = DateTime.UtcNow,
-            End = DateTime.UtcNow.AddHours(1)
+            Start = DateTimeOffset.UtcNow,
+            End = DateTimeOffset.UtcNow.AddHours(1)
         };
 
         var result = model.Validate();
@@ -18,12 +18,12 @@ public class ValidDateTimeRangeAttributeTests
     }
 
     [Fact]
-    public void ValidDateTimeRange_Invalid_ShouldFail()
+    public void ValidDateTimeOffsetRange_Invalid_ShouldFail()
     {
         var model = new TestModel
         {
-            Start = DateTime.UtcNow.AddDays(1),
-            End = DateTime.UtcNow
+            Start = DateTimeOffset.UtcNow.AddDays(1),
+            End = DateTimeOffset.UtcNow
         };
 
         var result = model.Validate();
@@ -36,9 +36,9 @@ public class ValidDateTimeRangeAttributeTests
 
     private class TestModel
     {
-        [ValidDateTimeRange("End")]
-        public DateTime Start { get; set; }
+        [ValidDateTimeOffsetRange("End")]
+        public DateTimeOffset Start { get; set; }
 
-        public DateTime End { get; set; }
+        public DateTimeOffset End { get; set; }
     }
 }

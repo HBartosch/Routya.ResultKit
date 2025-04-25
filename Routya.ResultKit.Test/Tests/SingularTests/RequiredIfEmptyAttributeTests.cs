@@ -1,7 +1,7 @@
 ﻿using Routya.ResultKit.Attributes;
 using Routya.ResultKit.Test.Helpers;
 
-namespace Routya.ResultKit.Test.Tests;
+namespace Routya.ResultKit.Test.Tests.SingularTests;
 public class RequiredIfEmptyAttributeTests
 {
     [Fact]
