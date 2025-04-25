@@ -157,6 +157,6 @@ Routya.ResultKit includes powerful validation attributes ready to use:
 | `[MaxItems(count)]` | Validate maximum items in a collection |
 | `[ValidStartEndDateRange("Start", "End")]` | Validate that StartDate is before EndDate (This is a class level attribute) |
 | `[ValidDateTimeOffsetRange("End")]` | Validate DateTimeOffset ranges |
-| `[ValidDateTimeRange("End")]` | Validate DateTimeOffset ranges |
+| `[ValidDateTimeRange("End")]` | Validate DateTime ranges |
 
 ---
