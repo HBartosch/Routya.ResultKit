@@ -16,6 +16,7 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 ✅ Consistent `Result<T>` response pattern  
 ✅ One-line `.Validate()` extension for request models  
 ✅ Rich built-in and custom validation attributes  
+✅ Works great with System.ComponentModel.Annotations
 
 ---
 
