@@ -1,3 +1,9 @@
+![CI](https://img.shields.io/github/actions/workflow/status/hbartosch/routya.resultkit/dotnet.yml?label=CI&style=flat-square)
+![CI](https://img.shields.io/github/actions/workflow/status/hbartosch/routya.resultkit/build-and-test.yml?label=Tests&style=flat-square)
+[![NuGet](https://img.shields.io/nuget/v/Routya.ResultKit)]([https://www.nuget.org/packages/Routya.ResultKit])
+[![NuGet](https://img.shields.io/nuget/dt/Routya.ResultKit)]([https://www.nuget.org/packages/Routya.ResultKit])
+![.NET Standard](https://img.shields.io/badge/netstandard-2.0%20%7C%202.1-blue?logo=dotnet&logoColor=white)
+
 # 📦 Routya.ResultKit
 
 **Lightweight result wrapper and validation toolkit for C# **  
