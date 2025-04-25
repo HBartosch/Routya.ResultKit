@@ -1,7 +1,7 @@
 ﻿using Routya.ResultKit.Attributes;
 using Routya.ResultKit.Test.Helpers;
 
-namespace Routya.ResultKit.Test.Tests.SingularTests;
+namespace Routya.ResultKit.Test.AttributeTests.SingularTests;
 public class MaxItemsAttributeTests
 {
     [Fact]

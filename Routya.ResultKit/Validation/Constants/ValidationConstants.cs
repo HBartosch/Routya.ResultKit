@@ -1,6 +1,6 @@
 ﻿namespace Routya.ResultKit.Validation.Constants
 {
-    internal class ValidationConstants
+    internal static class ValidationConstants
     {
         public static string DefaultMemberName => "General";
         public static string DefaultErrorMessage => "Invalid";

@@ -23,7 +23,7 @@ namespace Routya.ResultKit
             {
                 Title = title,
                 Status = statusCode,
-                Extensions = { ["errors"] = errors ?? new Dictionary<string, string[]>() }
+                Extensions = { [Constants.ErrorDictionaryKey] = errors ?? new Dictionary<string, string[]>() }
             };
             return new Result<T>(false, default!, problem);
         }

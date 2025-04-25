@@ -1,7 +1,7 @@
 ﻿using Routya.ResultKit.Test.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace Routya.ResultKit.Test.Tests.BuiltInTests;
+namespace Routya.ResultKit.Test.AttributeTests.BuiltInTests;
 public class RequiredAttributeTests
 {
     [Fact]

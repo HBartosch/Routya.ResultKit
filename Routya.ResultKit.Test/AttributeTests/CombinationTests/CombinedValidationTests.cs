@@ -3,7 +3,7 @@ using Routya.ResultKit.Attributes;
 using Routya.ResultKit.Test.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace Routya.ResultKit.Test.Tests.CombinationTests;
+namespace Routya.ResultKit.Test.AttributeTests.CombinationTests;
 public class CombinedValidationTests
 {
     [Fact]
