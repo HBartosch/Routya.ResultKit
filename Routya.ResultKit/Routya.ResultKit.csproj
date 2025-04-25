@@ -11,7 +11,7 @@
 	  <PackageProjectUrl>https://github.com/HBartosch/Routya.ResultKit</PackageProjectUrl>
 	  <PackageTags>result, validation, data-annotations, problem-details, error-handling </PackageTags>
 	  <Description>Lightweight result wrapper and validation toolkit for C# APIs. Includes Result, ProblemDetails, and powerful custom validation attributes.</Description>
-	  <PackageIcon>PackageIcon.png</PackageIcon>
+	  <PackageIcon>PackageIconResized.png</PackageIcon>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -28,7 +28,7 @@
   <ItemGroup>
   	<None Include="..\LICENSE" Pack="true" PackagePath="" />
   	<None Include="..\README.md" Pack="true" PackagePath="" />
-	<None Include="PackageIcon.png" Pack="true" PackagePath="" />
+	<None Include="PackageIconResized.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

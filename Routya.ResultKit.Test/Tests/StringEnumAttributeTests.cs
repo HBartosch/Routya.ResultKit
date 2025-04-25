@@ -9,7 +9,7 @@ public class StringEnumAttributeTests
     [Fact]
     public void StringEnum_Valid_ShouldPass()
     {
-        var model = new TestModel { Status = "Active" };
+        var model = new TestModel { Status = nameof(StatusType.Active) };
         var result = model.Validate();
         Assert.True(result.Success);
     }
