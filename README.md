@@ -15,7 +15,7 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 
 ✅ Consistent `Result<T>` response pattern  
 ✅ One-line `.Validate()` extension for request models  
-✅ .Transform() extension for clean and safe object/result projection
+✅ `.Transform()` extension for clean and safe object/result projection  
 ✅ Rich built-in and custom validation attributes  
 ✅ Works great with System.ComponentModel.Annotations
 
