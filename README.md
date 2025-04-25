@@ -6,7 +6,7 @@
 
 # 📦 Routya.ResultKit
 
-**Lightweight result wrapper and validation toolkit for C# **  
+**Lightweight result wrapper, validation and transformation toolkit for C# **  
 Brings clean `Result<T>` handling and extensible validation with custom attributes.
 
 ---
@@ -15,6 +15,7 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 
 ✅ Consistent `Result<T>` response pattern  
 ✅ One-line `.Validate()` extension for request models  
+✅ .Transform() extension for clean and safe object/result projection
 ✅ Rich built-in and custom validation attributes  
 ✅ Works great with System.ComponentModel.Annotations
 
@@ -23,7 +24,7 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 ## 📥 Installation
 
 ```bash
-dotnet add package Routya.ResultKit --version 1.0.0
+dotnet add package Routya.ResultKit --version 1.0.1
 ```
 
 ---
@@ -160,3 +161,83 @@ Routya.ResultKit includes powerful validation attributes ready to use:
 | `[ValidDateTimeRange("End")]` | Validate DateTime ranges |
 
 ---
+
+---
+
+## 🔁 Transforming Models
+
+Use `.Transform(...)` to reshape validated models or result data into domain entities or response objects — cleanly and safely.
+
+---
+
+### ✅ Example 1: Basic Object Transformation
+
+```csharp
+var request = "Hello";
+
+var greeting = request.Transform(str => new Greeting
+{
+    Message = str,
+    Length = str.Length
+});
+```
+
+```csharp
+public class Greeting
+{
+    public string Message { get; set; }
+    public int Length { get; set; }
+}
+```
+
+---
+
+### ✅ Example 2: Full Validate → Transform → Result Flow
+
+```csharp
+var result = request.Validate()
+    .Transform(req => new CreateUserCommand
+    {
+        Name = req.Name,
+        Email = req.Email,
+        Role = Enum.Parse<UserRole>(req.Role, ignoreCase: true)
+    });
+```
+
+---
+
+### ✅ Example 3: Transforming Result<T> Output
+
+```csharp
+var result = Result.Ok(user)
+    .Transform(u => new UserResponse
+    {
+        Id = u.Id,
+        Name = u.Name
+    });
+```
+
+---
+
+### 🧠 Why Use `Transform(...)`?
+
+| Benefit             | Description |
+|---------------------|-------------|
+| ✅ Fluent            | Clean chaining after `.Validate()` |
+| ✅ Safe              | When using Result<T> it only transforms data if result is successful |
+| ✅ Expressive        | Encourages intentional mapping logic |
+| ✅ Lightweight       | Zero dependencies, pure functional mapping |
+
+---
+
+### 🔍 Bonus: Works with Both Objects and Result<T>
+
+```csharp
+TOut Transform<TIn, TOut>(this TIn input, Func<TIn, TOut> selector)
+
+Result<TOut> Transform<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> selector)
+```
+
+---
+
+
