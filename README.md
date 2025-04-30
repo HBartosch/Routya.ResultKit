@@ -3,6 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Routya.ResultKit)](https://www.nuget.org/packages/Routya.ResultKit)
 [![NuGet](https://img.shields.io/nuget/dt/Routya.ResultKit)](https://www.nuget.org/packages/Routya.ResultKit)
 ![.NET Standard](https://img.shields.io/badge/netstandard-2.0%20%7C%202.1-blue?logo=dotnet&logoColor=white)
+![Supports Nested Validation](https://img.shields.io/badge/nested--validation-supported-brightgreen)
 
 # 📦 Routya.ResultKit
 
@@ -18,13 +19,15 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 ✅ `.Transform()` extension for clean and safe object/result projection  
 ✅ Rich built-in and custom validation attributes  
 ✅ Works great with System.ComponentModel.Annotations
+✅ Validation for nested objects
+
 
 ---
 
 ## 📥 Installation
 
 ```bash
-dotnet add package Routya.ResultKit --version 1.0.1
+dotnet add package Routya.ResultKit --version 1.0.2
 ```
 
 ---
