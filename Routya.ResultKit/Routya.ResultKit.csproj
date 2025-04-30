@@ -9,7 +9,7 @@
 	  <PackageId>Routya.ResultKit</PackageId>
 	  <RepositoryUrl>https://github.com/HBartosch/Routya.ResultKit</RepositoryUrl>
 	  <PackageProjectUrl>https://github.com/HBartosch/Routya.ResultKit</PackageProjectUrl>
-	  <PackageTags>result, validation, data-annotations, error-handling, response-wrapper, transform, mapping  </PackageTags>
+	  <PackageTags>result;validation;model validation;data-annotations;system.componentmodel.dataannotations;nested validation;fluent validation;error-handling;response-wrapper;transforming;mapping;resultkit;Routya </PackageTags>
 	  <Description>Lightweight result wrapper, validation and transformation toolkit for C# APIs. Includes Result, ProblemDetails, and powerful custom validation attributes.</Description>
 	  <PackageIcon>PackageIconResized.png</PackageIcon>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
