@@ -14,12 +14,12 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 
 ## ✨ Features
 
-✅ Consistent `Result<T>` response pattern  
-✅ One-line `.Validate()` extension for request models  
-✅ `.Transform()` extension for clean and safe object/result projection  
-✅ Rich built-in and custom validation attributes  
-✅ Works great with System.ComponentModel.Annotations
-✅ Validation for nested objects
+- ✅ Consistent `Result<T>` response pattern  
+- ✅ One-line `.Validate()` extension for request models  
+- ✅ `.Transform()` extension for clean and safe object/result projection  
+- ✅ Rich built-in and custom validation attributes  
+- ✅ Works great with System.ComponentModel.Annotations
+- ✅ Validation for nested objects
 
 
 ---
