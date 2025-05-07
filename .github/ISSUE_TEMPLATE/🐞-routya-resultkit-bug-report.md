@@ -11,21 +11,20 @@ assignees: HBartosch
 
 - **.NET version**:
 - **OS**:
-- **Routya.Core version**:
-- **Dependency Injection framework**:
+- **Routya.ResultKit version**:
 - **Used in** (check one):
   - [ ] ASP.NET Core
+  - [ ] Minimal API
   - [ ] Console App
-  - [ ] Worker Service
   - [ ] Other: ____________
 
 ## 📝 Describe the Bug
 
-_A clear and concise description of what the bug is._
+_What behavior or response output was incorrect?_
 
 ## ✅ Expected Behavior
 
-_What you expected to happen._
+_Describe what should have been returned/generated._
 
 ## ❌ Actual Behavior
 
