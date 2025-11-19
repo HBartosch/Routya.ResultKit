@@ -19,10 +19,16 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
 
     - name: Restore dependencies
       run: dotnet restore Routya.ResultKit.Test/Routya.ResultKit.Test.csproj
 
     - name: Run tests
       run: dotnet test Routya.ResultKit.Test/Routya.ResultKit.Test.csproj --configuration Release --verbosity normal
+
+    - name: Restore dependencies
+      run: dotnet restore Routya.ResultKit.AspNetCore.Test/Routya.ResultKit.AspNetCore.Test.csproj
+
+    - name: Run tests
+      run: dotnet test Routya.ResultKit.AspNetCore.Test/Routya.ResultKit.AspNetCore.Test.csproj --configuration Release --verbosity normal

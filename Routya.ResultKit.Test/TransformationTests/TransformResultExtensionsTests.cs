@@ -16,14 +16,15 @@ public class TransformResultExtensionsTests
     public void Transform_FailedResult_ShouldPreserveError()
     {
         var error = new Dictionary<string, string[]> { { "Name", new[] { "Required" } } };
-        var input = Result<string>.Fail("Invalid", 400, error);
+        var input = Result<string>.ValidationFailed(error);
 
         var result = input.Transform(x => x.Length);
 
         Assert.False(result.Success);
         Assert.Equal(input.Error!.Title, result.Error!.Title);
         Assert.Equal(input.Error.Status, result.Error.Status);
-        Assert.Contains("Name", ((IDictionary<string, string[]>)result.Error.Extensions["errors"]).Keys);
+        Assert.True(result.Error.TryGetExtension<Dictionary<string, string[]>>("errors", out var errors));
+        Assert.Contains("Name", errors.Keys);
     }
 
     [Fact]

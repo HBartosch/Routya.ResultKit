@@ -45,7 +45,7 @@ public class ValidateAndTransformTests
         });
 
         Assert.False(result.Success);
-        var errors = (IDictionary<string, string[]>)result.Error!.Extensions["errors"];
+        Assert.True(result.Error!.TryGetExtension<IDictionary<string, string[]>>("errors", out var errors));
         Assert.Contains("Name", errors.Keys);
         Assert.Contains("Email", errors.Keys);
     }

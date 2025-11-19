@@ -3,13 +3,12 @@ public static class ValidationTestHelper
 {
     public static IDictionary<string, string[]> GetErrors<T>(Result<T> result)
     {
-        if (result?.Error?.Extensions == null)
+        if (result?.Error == null)
             return new Dictionary<string, string[]>();
 
-        if (result.Error.Extensions.TryGetValue("errors", out var value) &&
-            value is IDictionary<string, string[]> typed)
+        if (result.Error.TryGetExtension<IDictionary<string, string[]>>("errors", out var errors))
         {
-            return typed;
+            return errors;
         }
 
         return new Dictionary<string, string[]>();

@@ -21,19 +21,28 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore Routya.ResultKit/Routya.ResultKit.csproj
       
     - name: Build
       run: dotnet build Routya.ResultKit/Routya.ResultKit.csproj --configuration Release --no-restore
 
+    - name: Restore dependencies
+      run: dotnet restore Routya.ResultKit.AspNetCore/Routya.ResultKit.AspNetCore.csproj
+      
+    - name: Build
+      run: dotnet build Routya.ResultKit.AspNetCore/Routya.ResultKit.AspNetCore.csproj --configuration Release --no-restore
+
     - name: Get version from tag
       id: get_version
       run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
       
-    - name: Pack
+    - name: Pack Routya.ResultKit
       run: dotnet pack Routya.ResultKit/Routya.ResultKit.csproj --configuration Release /p:PackageVersion=${{ env.VERSION }} --no-build --output ./nupkgs
+
+    - name: Pack Routya.ResultKit.AspNetCore
+      run: dotnet pack Routya.ResultKit.AspNetCore/Routya.ResultKit.AspNetCore.csproj --configuration Release /p:PackageVersion=${{ env.VERSION }} --no-build --output ./nupkgs
 
     - name: Push to NuGet
       run: dotnet nuget push ./nupkgs/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}

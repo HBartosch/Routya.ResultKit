@@ -1,4 +1,5 @@
 ﻿using System;
+#nullable enable
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 

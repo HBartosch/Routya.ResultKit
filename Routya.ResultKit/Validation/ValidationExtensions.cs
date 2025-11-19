@@ -1,4 +1,5 @@
-﻿using Routya.ResultKit.Validation.Constants;
+﻿#nullable enable
+using Routya.ResultKit.Validation.Constants;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Routya.ResultKit
                     g => g.Key,
                     g => g.Select(x => x.Error).ToArray());
 
-            return Result<T>.Fail(ValidationConstants.DefaultTitle, ValidationConstants.DefaultStatusCode, errors);
+            return Result<T>.ValidationFailed(errors);
         }
 
         private static void CollectValidationResults(object obj, List<ValidationResult> results, HashSet<object> visited, string? prefix)

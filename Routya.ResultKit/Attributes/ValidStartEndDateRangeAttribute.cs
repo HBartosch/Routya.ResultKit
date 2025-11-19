@@ -1,4 +1,5 @@
 ﻿using Routya.ResultKit.Validation.Constants;
+#nullable enable
 using System;
 using System.ComponentModel.DataAnnotations;
 

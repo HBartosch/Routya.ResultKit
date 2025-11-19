@@ -243,4 +243,10 @@ Result<TOut> Transform<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> selec
 
 ---
 
+## 📚 Documentation & Resources
+
+Please note that this is a major release version 2 and had a migration guide attached
+
+---
+
 
