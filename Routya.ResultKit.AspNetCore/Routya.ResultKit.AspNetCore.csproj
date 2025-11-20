@@ -16,6 +16,7 @@
     <PackageIcon>PackageIconResized.png</PackageIcon>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeUrl>https://github.com/HBartosch/Routya.ResultKit/blob/main/Routya.ResultKit.AspNetCore/README.md</PackageReadmeUrl>
     <PackageReleaseNotes>v2.1.0: Added support for 204 NoContent, 301 Permanent Redirect, and 302 Temporary Redirect. ToActionResult/ToHttpResult now automatically handle all semantic HTTP status codes including redirects.</PackageReleaseNotes>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright (c) 2025 Henry Bartosch</Copyright>

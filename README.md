@@ -2,6 +2,8 @@
 ![CI](https://img.shields.io/github/actions/workflow/status/hbartosch/routya.resultkit/build-and-test.yml?label=Tests&style=flat-square)
 [![NuGet](https://img.shields.io/nuget/v/Routya.ResultKit)](https://www.nuget.org/packages/Routya.ResultKit)
 [![NuGet](https://img.shields.io/nuget/dt/Routya.ResultKit)](https://www.nuget.org/packages/Routya.ResultKit)
+[![NuGet AspNetCore](https://img.shields.io/nuget/v/Routya.ResultKit.AspNetCore?label=AspNetCore)](https://www.nuget.org/packages/Routya.ResultKit.AspNetCore)
+[![NuGet AspNetCore](https://img.shields.io/nuget/dt/Routya.ResultKit.AspNetCore?label=AspNetCore%20downloads)](https://www.nuget.org/packages/Routya.ResultKit.AspNetCore)
 ![.NET Standard](https://img.shields.io/badge/netstandard-2.0%20%7C%202.1-blue?logo=dotnet&logoColor=white)
 ![Supports Nested Validation](https://img.shields.io/badge/nested--validation-supported-brightgreen)
 
