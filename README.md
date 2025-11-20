@@ -27,8 +27,10 @@ Brings clean `Result<T>` handling and extensible validation with custom attribut
 ## 📥 Installation
 
 ```bash
-dotnet add package Routya.ResultKit --version 1.0.2
+dotnet add package Routya.ResultKit --version 2.1.0
 ```
+
+> **Upgrading from v1.x?** See the [Migration Guide](#-migrating-from-v1x-to-v20) below.
 
 ---
 
@@ -74,74 +76,55 @@ using System.ComponentModel.DataAnnotations;
 ### 2. Validate and Return
 
 ```csharp
+using Routya.ResultKit;
+using Routya.ResultKit.Validation;
+
 app.MapPost("/users", (CreateUserRequest request) =>
 {
     var validationResult = request.Validate();
 
     if (!validationResult.Success)
-        return Results.BadRequest(validationResult);
+        return Results.BadRequest(validationResult.Error); // Returns ProblemDetails
 
-    return Results.Ok(Result.Ok(new { Id = 1 }));
+    var user = new User { Id = 1, Name = request.Name, Email = request.Email };
+    return Results.Ok(user);
 });
 ```
 
 ---
 
-### ✅ Successful Response Example
+### ✅ Successful Response Example (200 OK)
 
 ```json
 {
-	"Success": true,
-	"Data": {
-		"Name": "Henry",
-		"Email": "henry@example.com",
-		"Age": 30,
-		"Role": "Admin",
-		"Password": "abc123",
-		"ConfirmPassword": "abc123",
-		"MinPurchase": 100.0,
-		"MaxPurchase": 200.0
-	},
-	"Error": null
+	"id": 1,
+	"name": "Henry",
+	"email": "henry@example.com"
 }
 ```
 
 ---
 
-### ❌ Validation Error Response Example
+### ❌ Validation Error Response Example (422 Unprocessable Entity)
 
 ```json
 {
-	"Success": false,
-	"Data": null,
-	"Error": {
-		"Title": "Validation Failed",
-		"Status": 400,
-		"Extensions": {
-			"errors": {
-				"Name": [
-					"The Name field is required."
-				],
-				"Email": [
-					"The Email field is not a valid e-mail address."
-				],
-				"Age": [
-					"The field Age must be between 18 and 120."
-				],
-				"Role": [
-					"Role must be one of: Admin, User, Guest"
-				],
-				"ConfirmPassword": [
-					"'ConfirmPassword' and 'Password' do not match."
-				],
-				"MaxPurchase": [
-					"MaxPurchase must be greater than MinPurchase"
-				]
-			}
-		}
+	"type": "urn:problem-type:validation-error",
+	"title": "Validation Failed",
+	"status": 422,
+	"detail": "One or more validation errors occurred.",
+	"errors": {
+		"name": ["The Name field is required."],
+		"email": ["The Email field is not a valid e-mail address."],
+		"age": ["The field Age must be between 18 and 120."],
+		"role": ["Role must be one of: Admin, User, Guest"],
+		"confirmPassword": ["'ConfirmPassword' and 'Password' do not match."],
+		"maxPurchase": ["MaxPurchase must be greater than MinPurchase"]
 	}
 }
 ```
+
+> **Note:** v2.0 uses RFC 7807 compliant ProblemDetails for all errors.
 
 ---
 
@@ -243,9 +226,153 @@ Result<TOut> Transform<TIn, TOut>(this Result<TIn> result, Func<TIn, TOut> selec
 
 ---
 
+## 🌐 HTTP Status Code Support
+
+Result<T> carries semantic HTTP intent with automatic status code handling:
+
+```csharp
+// Success status codes
+Result<User>.Ok(user);              // 200 OK
+Result<User>.Created(user);         // 201 Created
+Result<User>.Accepted(user);        // 202 Accepted
+Result<User>.NoContent();           // 204 No Content
+
+// Redirect status codes
+Result<string>.Redirect(location);           // 302 Found (temporary)
+Result<string>.RedirectPermanent(location);  // 301 Moved Permanently
+
+// Error status codes (automatic from factory methods)
+Result<User>.NotFound("User not found");     // 404 Not Found
+Result<User>.BadRequest("Invalid data");     // 400 Bad Request
+Result<User>.Unauthorized("Not authenticated"); // 401 Unauthorized
+```
+
+### NoContent Example - DELETE Operations
+
+```csharp
+[HttpDelete("users/{id}")]
+public IActionResult DeleteUser(int id)
+{
+    var user = _repository.FindById(id);
+    if (user == null)
+        return Result<User>.NotFound($"User {id} not found").ToActionResult(HttpContext);
+    
+    _repository.Delete(user);
+    return Result<User>.NoContent().ToActionResult(HttpContext); // Returns 204
+}
+```
+
+### Redirect Examples
+
+```csharp
+// Temporary redirect (302) - for moved resources
+[HttpGet("docs")]
+public IActionResult RedirectToDocs()
+{
+    return Result<string>.Redirect("https://routya.github.io/").ToActionResult(HttpContext);
+}
+
+// Permanent redirect (301) - for permanently moved endpoints
+[HttpGet("old-users")]
+public IActionResult OldEndpoint()
+{
+    var newLocation = $"{Request.Scheme}://{Request.Host}/api/users";
+    return Result<string>.RedirectPermanent(newLocation).ToActionResult(HttpContext);
+}
+
+// HEAD request with NoContent
+[HttpHead("users/check-email")]
+public IActionResult CheckEmailExists([FromQuery] string email)
+{
+    var exists = _repository.EmailExists(email);
+    return exists 
+        ? Result<User>.NoContent().ToActionResult(HttpContext)
+        : Result<User>.NotFound("Email not found").ToActionResult(HttpContext);
+}
+```
+
+> **Note:** When using the `Routya.ResultKit.AspNetCore` package, `ToActionResult()` and `ToHttpResult()` automatically use the appropriate status code from the Result. See [ASP.NET Core Integration](https://www.nuget.org/packages/Routya.ResultKit.AspNetCore) for details.
+
+---
+
+## 🔄 Migrating from v1.x to v2.0
+
+v2.0 introduces RFC 7807 ProblemDetails and a cleaner API. Here's what changed:
+
+### Key Changes
+
+1. **ProblemDetails replaces old error format**
+   ```csharp
+   // ❌ v1.x - Simple error dictionary
+   Result.Fail("Validation Failed", 400, errors)
+   
+   // ✅ v2.0 - RFC 7807 ProblemDetails
+   Result.Fail(ProblemDetailsBuilder.ValidationError("Validation Failed")
+       .WithErrors(errors)
+       .Build())
+   ```
+
+2. **Result factory methods renamed**
+   ```csharp
+   // ❌ v1.x
+   Result.Success(data)
+   Result.Failure("Error", 400)
+   
+   // ✅ v2.0
+   Result.Ok(data)
+   Result.Created(data)  // New: Sets 201 status
+   Result.Accepted(data) // New: Sets 202 status
+   Result.NoContent()    // New in v2.1: Sets 204 status
+   Result.Redirect(location)        // New in v2.1: Sets 302 status
+   Result.RedirectPermanent(location) // New in v2.1: Sets 301 status
+   Result.Fail(problemDetails)
+   ```
+
+3. **Validation returns ProblemDetails**
+   ```csharp
+   // ❌ v1.x
+   var result = request.ValidateObject();
+   if (!result.Success)
+       return result; // Returned Result<T>
+   
+   // ✅ v2.0
+   var result = request.Validate();
+   if (!result.Success)
+       return result.Error; // Returns ProblemDetails
+   ```
+
+4. **ASP.NET Core Integration (New Package)**
+   ```bash
+   dotnet add package Routya.ResultKit.AspNetCore
+   ```
+   
+   ```csharp
+   // Automatic conversion to IResult/IActionResult
+   return result.ToActionResult(HttpContext);
+   
+   // Automatic exception handling
+   builder.Services.AddResultKitProblemDetails();
+   app.UseResultKitExceptionHandler();
+   ```
+
+### Quick Migration Steps
+
+1. Update package: `dotnet add package Routya.ResultKit --version 2.1.0`
+2. Replace `Result.Success` → `Result.Ok`
+3. Replace `Result.Failure` → `Result.Fail` (use ProblemDetailsBuilder)
+4. Replace `ValidateObject()` → `Validate()`
+5. For ASP.NET Core, add `Routya.ResultKit.AspNetCore` package
+
+**[📖 Full Migration Guide](https://github.com/HBartosch/Routya.ResultKit/blob/main/docs/MIGRATION_V2.md)** - Complete migration documentation with examples
+
+---
+
 ## 📚 Documentation & Resources
 
-Please note that this is a major release version 2 and had a migration guide attached
+- **[Official Website](https://routya.github.io/)** - Routya project homepage
+- **[Migration Guide to v2.0](https://github.com/HBartosch/Routya.ResultKit/blob/main/docs/MIGRATION_V2.md)** - Complete guide for upgrading from v1.x
+- **[ASP.NET Core Integration](https://www.nuget.org/packages/Routya.ResultKit.AspNetCore)** - ProblemDetails, middleware, IResult/IActionResult extensions
+- **[Demo API](https://github.com/HBartosch/Routya.ResultKit/tree/main/Routya.ResultKit.Demo.Api)** - Comprehensive examples of all features
 
 ---
 

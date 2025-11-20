@@ -160,4 +160,131 @@ public class ResultExtensionsTests
         objectResult.StatusCode.ShouldBe(409);
         objectResult.ContentTypes.ShouldContain("application/problem+json");
     }
+
+    // NoContent Tests
+    [Fact]
+    public void ToActionResult_WithNoContent_ShouldReturnNoContentResult()
+    {
+        // Arrange
+        var result = Result<string>.NoContent();
+
+        // Act
+        var actionResult = result.ToActionResult();
+
+        // Assert
+        actionResult.ShouldBeOfType<NoContentResult>();
+        var noContentResult = (NoContentResult)actionResult;
+        noContentResult.StatusCode.ShouldBe(204);
+    }
+
+    [Fact]
+    public void ToHttpResult_WithNoContent_ShouldReturnNoContentResult()
+    {
+        // Arrange
+        var result = Result<string>.NoContent();
+
+        // Act
+        var httpResult = result.ToHttpResult();
+
+        // Assert
+        httpResult.ShouldNotBeNull();
+    }
+
+    // Redirect Tests
+    [Fact]
+    public void ToActionResult_WithTemporaryRedirect_ShouldReturnRedirectResult()
+    {
+        // Arrange
+        var location = "https://example.com/new-location";
+        var result = Result<string>.Redirect(location);
+
+        // Act
+        var actionResult = result.ToActionResult();
+
+        // Assert
+        actionResult.ShouldBeOfType<RedirectResult>();
+        var redirectResult = (RedirectResult)actionResult;
+        redirectResult.Url.ShouldBe(location);
+        redirectResult.Permanent.ShouldBeFalse();
+    }
+
+    [Fact]
+    public void ToActionResult_WithPermanentRedirect_ShouldReturnRedirectResultWithPermanentFlag()
+    {
+        // Arrange
+        var location = "https://example.com/permanent-location";
+        var result = Result<string>.RedirectPermanent(location);
+
+        // Act
+        var actionResult = result.ToActionResult();
+
+        // Assert
+        actionResult.ShouldBeOfType<RedirectResult>();
+        var redirectResult = (RedirectResult)actionResult;
+        redirectResult.Url.ShouldBe(location);
+        redirectResult.Permanent.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void ToHttpResult_WithTemporaryRedirect_ShouldReturnRedirectResult()
+    {
+        // Arrange
+        var location = "https://example.com/temp";
+        var result = Result<string>.Redirect(location);
+
+        // Act
+        var httpResult = result.ToHttpResult();
+
+        // Assert
+        httpResult.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public void ToHttpResult_WithPermanentRedirect_ShouldReturnRedirectPermanentResult()
+    {
+        // Arrange
+        var location = "https://example.com/permanent";
+        var result = Result<string>.RedirectPermanent(location);
+
+        // Act
+        var httpResult = result.ToHttpResult();
+
+        // Assert
+        httpResult.ShouldNotBeNull();
+    }
+
+    // Status Code Tests
+    [Fact]
+    public void ToActionResult_WithCreated_ShouldReturnCreatedResult()
+    {
+        // Arrange
+        var data = new { Id = 123 };
+        var result = Result<object>.Created(data);
+
+        // Act
+        var actionResult = result.ToActionResult();
+
+        // Assert
+        actionResult.ShouldBeOfType<CreatedResult>();
+        var createdResult = (CreatedResult)actionResult;
+        createdResult.StatusCode.ShouldBe(201);
+        createdResult.Value.ShouldBe(data);
+    }
+
+    [Fact]
+    public void ToActionResult_WithAccepted_ShouldReturnAcceptedResult()
+    {
+        // Arrange
+        var data = new { JobId = "abc123" };
+        var result = Result<object>.Accepted(data);
+
+        // Act
+        var actionResult = result.ToActionResult();
+
+        // Assert
+        actionResult.ShouldBeOfType<AcceptedResult>();
+        var acceptedResult = (AcceptedResult)actionResult;
+        acceptedResult.StatusCode.ShouldBe(202);
+        acceptedResult.Value.ShouldBe(data);
+    }
 }

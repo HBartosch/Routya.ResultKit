@@ -194,4 +194,96 @@ public class ResultTests
         Assert.NotEqual(notFound.Error!.Type, unauthorized.Error!.Type);
         Assert.NotEqual(badRequest.Error!.Type, unauthorized.Error!.Type);
     }
+
+    // NoContent Tests
+    [Fact]
+    public void NoContent_ShouldCreateSuccessfulResultWith204()
+    {
+        var result = Result<string>.NoContent();
+
+        Assert.True(result.Success);
+        Assert.Null(result.Data);
+        Assert.Null(result.Error);
+        Assert.Equal(204, result.StatusCode);
+        Assert.Null(result.RedirectLocation);
+    }
+
+    // Redirect Tests
+    [Fact]
+    public void Redirect_WithTemporary_ShouldCreateSuccessfulResultWith302()
+    {
+        var location = "https://example.com/new-location";
+        var result = Result<string>.Redirect(location);
+
+        Assert.True(result.Success);
+        Assert.Null(result.Error);
+        Assert.Equal(302, result.StatusCode);
+        Assert.Equal(location, result.RedirectLocation);
+    }
+
+    [Fact]
+    public void Redirect_WithPermanent_ShouldCreateSuccessfulResultWith301()
+    {
+        var location = "https://example.com/permanent-location";
+        var result = Result<string>.Redirect(location, permanent: true);
+
+        Assert.True(result.Success);
+        Assert.Null(result.Error);
+        Assert.Equal(301, result.StatusCode);
+        Assert.Equal(location, result.RedirectLocation);
+    }
+
+    [Fact]
+    public void RedirectPermanent_ShouldCreateSuccessfulResultWith301()
+    {
+        var location = "https://example.com/moved";
+        var result = Result<string>.RedirectPermanent(location);
+
+        Assert.True(result.Success);
+        Assert.Equal(301, result.StatusCode);
+        Assert.Equal(location, result.RedirectLocation);
+    }
+
+    [Fact]
+    public void Redirect_WithNullLocation_ShouldThrowArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => Result<string>.Redirect(null!));
+    }
+
+    [Fact]
+    public void Redirect_WithEmptyLocation_ShouldThrowArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => Result<string>.Redirect(string.Empty));
+    }
+
+    [Fact]
+    public void Redirect_WithWhitespaceLocation_ShouldThrowArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => Result<string>.Redirect("   "));
+    }
+
+    // StatusCode Tests
+    [Fact]
+    public void Created_ShouldHaveStatusCode201()
+    {
+        var result = Result<string>.Created("test");
+        Assert.Equal(201, result.StatusCode);
+        Assert.Null(result.RedirectLocation);
+    }
+
+    [Fact]
+    public void Accepted_ShouldHaveStatusCode202()
+    {
+        var result = Result<string>.Accepted("test");
+        Assert.Equal(202, result.StatusCode);
+        Assert.Null(result.RedirectLocation);
+    }
+
+    [Fact]
+    public void Ok_ShouldHaveStatusCode200()
+    {
+        var result = Result<string>.Ok("test");
+        Assert.Equal(200, result.StatusCode);
+        Assert.Null(result.RedirectLocation);
+    }
 }

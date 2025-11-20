@@ -7,14 +7,17 @@
 	  <Title>Routya.ResultKit</Title>
 	  <Authors>Henry Bartosch</Authors>
 	  <PackageId>Routya.ResultKit</PackageId>
-	  <Version>2.0.0</Version>
+	  <Version>2.1.0</Version>
 	  <RepositoryUrl>https://github.com/HBartosch/Routya.ResultKit</RepositoryUrl>
-	  <PackageProjectUrl>https://github.com/HBartosch/Routya.ResultKit</PackageProjectUrl>
+	  <PackageProjectUrl>https://routya.github.io/</PackageProjectUrl>
 	  <PackageTags>result;validation;model validation;data-annotations;system.componentmodel.dataannotations;nested validation;fluent validation;error-handling;response-wrapper;transforming;mapping;resultkit;Routya;rfc7807;problem-details</PackageTags>
 	  <Description>Lightweight result wrapper, validation and transformation toolkit for C# APIs with RFC 7807 Problem Details support. Includes Result, ProblemDetails, and powerful custom validation attributes.</Description>
 	  <PackageIcon>PackageIconResized.png</PackageIcon>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageReleaseNotes>v2.1.0: Added NoContent() for 204 responses and Redirect()/RedirectPermanent() for 301/302 redirects. Includes automatic status code handling.</PackageReleaseNotes>
+	  <RepositoryType>git</RepositoryType>
+	  <Copyright>Copyright (c) 2025 Henry Bartosch</Copyright>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 

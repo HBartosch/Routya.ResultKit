@@ -30,13 +30,19 @@ namespace Routya.ResultKit
         /// The HTTP status code associated with this result (e.g., 200 for Ok, 201 for Created, 202 for Accepted, or from ProblemDetails for failures).
         /// </summary>
         public int StatusCode { get; }
+        
+        /// <summary>
+        /// The redirect location URI for redirect results (301, 302).
+        /// </summary>
+        public string? RedirectLocation { get; }
 
-        private Result(bool success, T data, ProblemDetails? error, int statusCode = 200)
+        private Result(bool success, T data, ProblemDetails? error, int statusCode = 200, string? redirectLocation = null)
         {
             Success = success;
             Data = data;
             Error = error;
             StatusCode = statusCode;
+            RedirectLocation = redirectLocation;
         }
 
         /// <summary>
@@ -44,28 +50,56 @@ namespace Routya.ResultKit
         /// </summary>
         /// <param name="data">The data to return.</param>
         /// <returns>A successful Result instance.</returns>
-        public static Result<T> Ok(T data) => new Result<T>(true, data, null, 200);
+        public static Result<T> Ok(T data) => new Result<T>(true, data, null, 200, null);
 
         /// <summary>
         /// Creates a successful result with the provided data for a Created (201) response.
         /// </summary>
         /// <param name="data">The data to return.</param>
         /// <returns>A successful Result instance with 201 status code.</returns>
-        public static Result<T> Created(T data) => new Result<T>(true, data, null, 201);
+        public static Result<T> Created(T data) => new Result<T>(true, data, null, 201, null);
 
         /// <summary>
         /// Creates a successful result with the provided data for an Accepted (202) response.
         /// </summary>
         /// <param name="data">The data to return.</param>
         /// <returns>A successful Result instance with 202 status code.</returns>
-        public static Result<T> Accepted(T data) => new Result<T>(true, data, null, 202);
+        public static Result<T> Accepted(T data) => new Result<T>(true, data, null, 202, null);
+
+        /// <summary>
+        /// Creates a successful result with no content for a No Content (204) response.
+        /// Typically used for DELETE or PUT operations that succeed without returning data.
+        /// </summary>
+        /// <returns>A successful Result instance with 204 status code.</returns>
+        public static Result<T> NoContent() => new Result<T>(true, default!, null, 204, null);
+
+        /// <summary>
+        /// Creates a successful redirect result with the specified location.
+        /// </summary>
+        /// <param name="location">The URI to redirect to.</param>
+        /// <param name="permanent">Whether the redirect is permanent (301) or temporary (302). Default is temporary.</param>
+        /// <returns>A successful Result instance with 301 or 302 status code.</returns>
+        public static Result<T> Redirect(string location, bool permanent = false)
+        {
+            if (string.IsNullOrWhiteSpace(location))
+                throw new ArgumentNullException(nameof(location), "Redirect location cannot be null or empty.");
+            
+            return new Result<T>(true, default!, null, permanent ? 301 : 302, location);
+        }
+
+        /// <summary>
+        /// Creates a successful permanent redirect result with the specified location.
+        /// </summary>
+        /// <param name="location">The URI to redirect to.</param>
+        /// <returns>A successful Result instance with 301 status code.</returns>
+        public static Result<T> RedirectPermanent(string location) => Redirect(location, permanent: true);
 
         /// <summary>
         /// Creates a failed result with the provided ProblemDetails.
         /// </summary>
         /// <param name="problem">The RFC 7807 compliant problem details.</param>
         /// <returns>A failed Result instance.</returns>
-        public static Result<T> Fail(ProblemDetails problem) => new Result<T>(false, default!, problem, problem.Status ?? 500);
+        public static Result<T> Fail(ProblemDetails problem) => new Result<T>(false, default!, problem, problem.Status ?? 500, null);
 
         /// <summary>
         /// Creates a failed result with the provided title, status code, and optional errors.

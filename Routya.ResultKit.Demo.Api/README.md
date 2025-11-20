@@ -20,9 +20,12 @@ This demo API demonstrates:
 
 ```csharp
 // Success results with different status codes
-Result<User>.Ok(user)        // 200 OK
-Result<User>.Created(user)   // 201 Created
-Result<User>.Accepted(data)  // 202 Accepted
+Result<User>.Ok(user)                        // 200 OK
+Result<User>.Created(user)                   // 201 Created
+Result<User>.Accepted(data)                  // 202 Accepted
+Result<User>.NoContent()                     // 204 No Content
+Result<string>.Redirect(location)            // 302 Found (temporary)
+Result<string>.RedirectPermanent(location)   // 301 Moved Permanently
 
 // Error results from ProblemDetails
 Result<User>.NotFound()      // 404 Not Found
@@ -183,6 +186,69 @@ Demonstrates all validation features including built-in and custom attributes.
     }
   ]
 }
+```
+
+#### Delete User - `DELETE /api/validation/users/{id}`
+
+**Demonstrates**: `Result.NoContent()` for 204 responses
+
+**Request**: `DELETE /api/validation/users/1`
+
+**Success Response** (204 No Content):
+```
+HTTP/1.1 204 No Content
+```
+
+**Error Response** (404 Not Found):
+```json
+{
+  "type": "urn:problem-type:not-found",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "User with ID 1 not found",
+  "instance": "/api/validation/users/1"
+}
+```
+
+#### Check Email Exists - `HEAD /api/validation/users/check-email?email={email}`
+
+**Demonstrates**: HEAD request with `Result.NoContent()`
+
+**Request**: `HEAD /api/validation/users/check-email?email=john@example.com`
+
+**Success Response** (204 No Content):
+```
+HTTP/1.1 204 No Content
+```
+
+**Error Response** (404 Not Found):
+```
+HTTP/1.1 404 Not Found
+Content-Type: application/problem+json
+```
+
+#### Redirect to Documentation - `GET /api/validation/docs`
+
+**Demonstrates**: Temporary redirect with `Result.Redirect()`
+
+**Request**: `GET /api/validation/docs`
+
+**Response** (302 Found):
+```
+HTTP/1.1 302 Found
+Location: https://routya.github.io/
+```
+
+#### Redirect from Old Endpoint - `GET /api/validation/old-users`
+
+**Demonstrates**: Permanent redirect with `Result.RedirectPermanent()`
+
+**Request**: `GET /api/validation/old-users`
+
+**Response** (301 Moved Permanently):
+```
+HTTP/1.1 301 Moved Permanently
+Location: http://localhost:5000/api/validation/users
 ```
 
 ### 2. Transformation Controller (`/api/transformation`)

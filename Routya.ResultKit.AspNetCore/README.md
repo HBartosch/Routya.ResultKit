@@ -20,7 +20,7 @@ ASP.NET Core integration for [Routya.ResultKit](https://github.com/HBartosch/Rou
 ## Installation
 
 ```bash
-dotnet add package Routya.ResultKit.AspNetCore
+dotnet add package Routya.ResultKit.AspNetCore --version 2.1.0
 ```
 
 ## Quick Start
@@ -128,8 +128,86 @@ public class UsersController : ControllerBase
         return Result<object>.Accepted(new { id, status = "queued" })
             .ToActionResult(HttpContext);
     }
+    
+    [HttpDelete("{id}")]
+    public IActionResult DeleteUser(int id)
+    {
+        var user = _repository.FindById(id);
+        if (user == null)
+            return Result<User>.NotFound($"User {id} not found")
+                .ToActionResult(HttpContext);
+        
+        _repository.Delete(user);
+        
+        // Result.NoContent() automatically sets 204 status code
+        return Result<User>.NoContent().ToActionResult(HttpContext);
+    }
 }
 ```
+
+## Result Status Codes
+
+Result<T> carries semantic HTTP intent with automatic status code handling:
+
+| Method | Status Code | Description | Use Case |
+|--------|-------------|-------------|----------|
+| `Ok(data)` | 200 | Success | Standard GET, PUT operations |
+| `Created(data)` | 201 | Resource created | POST operations creating resources |
+| `Accepted(data)` | 202 | Accepted for processing | Async/queued operations |
+| `NoContent()` | 204 | Success with no body | DELETE, HEAD, PUT with no response |
+| `Redirect(location)` | 302 | Temporary redirect | Resource temporarily moved |
+| `RedirectPermanent(location)` | 301 | Permanent redirect | Resource permanently moved |
+| `NotFound(msg)` | 404 | Not found | Resource doesn't exist |
+| `BadRequest(msg)` | 400 | Bad request | Invalid input |
+| `Unauthorized(msg)` | 401 | Not authenticated | Authentication required |
+
+### NoContent Example
+
+```csharp
+[HttpDelete("users/{id}")]
+public IActionResult DeleteUser(int id)
+{
+    var result = _repository.Delete(id);
+    return result 
+        ? Result<User>.NoContent().ToActionResult(HttpContext)
+        : Result<User>.NotFound($"User {id} not found").ToActionResult(HttpContext);
+}
+
+// HEAD request
+[HttpHead("users/{id}")]
+public IActionResult CheckUserExists(int id)
+{
+    var exists = _repository.Exists(id);
+    return exists
+        ? Result<User>.NoContent().ToActionResult(HttpContext)
+        : Result<User>.NotFound("User not found").ToActionResult(HttpContext);
+}
+```
+
+### Redirect Examples
+
+```csharp
+// Temporary redirect (302)
+[HttpGet("docs")]
+public IActionResult RedirectToDocs()
+{
+    return Result<string>.Redirect("https://routya.github.io/")
+        .ToActionResult(HttpContext);
+}
+
+// Permanent redirect (301)
+[HttpGet("old-endpoint")]
+public IActionResult OldEndpoint()
+{
+    var newUrl = $"{Request.Scheme}://{Request.Host}/api/new-endpoint";
+    return Result<string>.RedirectPermanent(newUrl)
+        .ToActionResult(HttpContext);
+}
+```
+
+> **Note:** `ToActionResult()` and `ToHttpResult()` automatically use the appropriate status code from Result<T>. No manual status code parameters needed!
+
+---
 
 ## Exception Handling
 

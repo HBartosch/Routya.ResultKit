@@ -26,6 +26,8 @@ namespace Routya.ResultKit.AspNetCore.Extensions
                     201 => Results.Created(context?.Request.Path.Value ?? string.Empty, result.Data),
                     202 => Results.Accepted(context?.Request.Path.Value ?? string.Empty, result.Data),
                     204 => Results.NoContent(),
+                    301 => Results.Redirect(result.RedirectLocation ?? "/", permanent: true),
+                    302 => Results.Redirect(result.RedirectLocation ?? "/"),
                     _ => Results.Ok(result.Data)
                 };
             }
@@ -65,6 +67,8 @@ namespace Routya.ResultKit.AspNetCore.Extensions
                     201 => new CreatedResult(context?.Request.Path.Value ?? string.Empty, result.Data),
                     202 => new AcceptedResult(context?.Request.Path.Value ?? string.Empty, result.Data),
                     204 => new NoContentResult(),
+                    301 => new RedirectResult(result.RedirectLocation ?? "/", permanent: true),
+                    302 => new RedirectResult(result.RedirectLocation ?? "/", permanent: false),
                     _ => new OkObjectResult(result.Data)
                 };
             }

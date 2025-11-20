@@ -205,4 +205,78 @@ public class ValidationController : ControllerBase
         
         return NoContent();
     }
+
+    /// <summary>
+    /// Delete a user by ID - demonstrates NoContent (204) response
+    /// </summary>
+    /// <remarks>
+    /// Example request: DELETE /api/validation/users/1
+    /// 
+    /// Returns 204 No Content on success, or 404 Not Found if user doesn't exist
+    /// </remarks>
+    [HttpDelete("users/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), StatusCodes.Status404NotFound)]
+    public IActionResult DeleteUser(int id)
+    {
+        var user = Users.FirstOrDefault(u => u.Id == id);
+        if (user == null)
+        {
+            return Result<User>.NotFound($"User with ID {id} not found").ToActionResult(HttpContext);
+        }
+
+        Users.Remove(user);
+        return Result<User>.NoContent().ToActionResult(HttpContext);
+    }
+
+    /// <summary>
+    /// Check if an email is already registered - demonstrates HEAD request with NoContent (204)
+    /// </summary>
+    /// <remarks>
+    /// Example request: HEAD /api/validation/users/check-email?email=john@example.com
+    /// 
+    /// Returns 204 No Content if email exists, or 404 Not Found if it doesn't
+    /// </remarks>
+    [HttpHead("users/check-email")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), StatusCodes.Status404NotFound)]
+    public IActionResult CheckEmailExists([FromQuery] string email)
+    {
+        var exists = Users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        
+        return exists 
+            ? Result<User>.NoContent().ToActionResult(HttpContext)
+            : Result<User>.NotFound("Email not found").ToActionResult(HttpContext);
+    }
+
+    /// <summary>
+    /// Redirect to API documentation - demonstrates temporary redirect (302)
+    /// </summary>
+    /// <remarks>
+    /// Example request: GET /api/validation/docs
+    /// 
+    /// Returns 302 Found with redirect to https://routya.github.io/
+    /// </remarks>
+    [HttpGet("docs")]
+    [ProducesResponseType(StatusCodes.Status302Found)]
+    public IActionResult RedirectToDocs()
+    {
+        return Result<string>.Redirect("https://routya.github.io/").ToActionResult(HttpContext);
+    }
+
+    /// <summary>
+    /// Permanent redirect from old endpoint - demonstrates permanent redirect (301)
+    /// </summary>
+    /// <remarks>
+    /// Example request: GET /api/validation/old-users
+    /// 
+    /// Returns 301 Moved Permanently with redirect to /api/validation/users
+    /// </remarks>
+    [HttpGet("old-users")]
+    [ProducesResponseType(StatusCodes.Status301MovedPermanently)]
+    public IActionResult RedirectToNewEndpoint()
+    {
+        var newLocation = $"{Request.Scheme}://{Request.Host}/api/validation/users";
+        return Result<string>.RedirectPermanent(newLocation).ToActionResult(HttpContext);
+    }
 }
